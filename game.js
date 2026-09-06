@@ -471,6 +471,17 @@ else if (tela == "prazoObjetivo") {
     tela = "valorPrazo";
 
 }
+   else if (tela == "valorPrazo") {
+
+    if (prazoObjetivo != "") {
+
+        objetivo.prazo = Number(prazoObjetivo);
+        objetivo.tipoPrazo = tipoPrazo;
+
+        tela = "aporteObjetivo";
+    }
+}     
+
         // =====================
         // MENU DO BANCO
         // =====================
@@ -1301,6 +1312,32 @@ function desenharValorPrazo() {
     );
 }
 
+function desenharAporteObjetivo() {
+
+    ctx.fillStyle = "#d9d9d9";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "darkblue";
+    ctx.fillRect(0, 0, canvas.width, 80);
+
+    ctx.fillStyle = "white";
+    ctx.font = "40px Arial";
+    ctx.fillText("APORTE MENSAL", 330, 55);
+
+    ctx.fillStyle = "black";
+    ctx.font = "26px Arial";
+    ctx.fillText("Quanto você pretende guardar por mês?", 250, 180);
+
+    ctx.fillStyle = "darkblue";
+    ctx.font = "32px Arial";
+    ctx.fillText("R$ " + aporteMensal, 430, 270);
+
+    ctx.fillStyle = "black";
+    ctx.font = "18px Arial";
+    ctx.fillText("Digite o valor que você pretende guardar.", 330, 350);
+    ctx.fillText("Pressione ENTER para continuar.", 350, 450);
+    ctx.fillText("Pressione ESC para voltar.", 350, 500);
+}
 
 // ==================================================
 // DEFINIR VALOR
@@ -1484,6 +1521,11 @@ if (tela == "valorPrazo") {
 
     return;
 }
+ if (tela == "aporteObjetivo") {
+    desenharAporteObjetivo();
+    return;
+}   
+
     // ==================================================
     // BANCO
     // ==================================================
