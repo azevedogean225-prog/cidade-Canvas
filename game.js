@@ -1478,7 +1478,12 @@ function desenhar() {
 
     return;
 }
+if (tela == "valorPrazo") {
 
+    desenharValorPrazo();
+
+    return;
+}
     // ==================================================
     // BANCO
     // ==================================================
