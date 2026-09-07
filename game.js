@@ -237,7 +237,7 @@ if (tela == "valorPrazo") {
     }
 }
 
-   v// ==================================================
+    // ==================================================
     // CRIAR OBJETIVO
     // ==================================================
 
@@ -494,6 +494,18 @@ else if (tela == "prazoObjetivo") {
 
         tela = "aporteObjetivo";
     }
+}     
+else if (tela == "aporteObjetivo") {
+
+    if (aporteMensal != "") {
+
+        objetivo.aporteMensal = Number(aporteMensal);
+
+        tela = "parabensObjetivo";
+    }
+}
+   else if (tela == "parabensObjetivo") {
+        tela = "banco"
 }     
 
         // =====================
@@ -1352,7 +1364,42 @@ function desenharAporteObjetivo() {
     ctx.fillText("Pressione ENTER para continuar.", 350, 450);
     ctx.fillText("Pressione ESC para voltar.", 350, 500);
 }
+  
+// ==================================================
+// PARABÉNS PELO PRIMEIRO OBJETIVO
+// ==================================================
 
+function desenharParabensObjetivo() {
+    ctx.fillStyle = "#d9d9d9";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "darkblue";
+    ctx.fillRect(0, 0, canvas.width, 100);
+
+    ctx.fillStyle = "white";
+    ctx.font = "40px Arial";
+    ctx.fillText("PARABÉNS!", 390, 65);
+
+    ctx.fillStyle = "black";
+    ctx.font = "28px Arial";
+    ctx.fillText("Você criou seu primeiro objetivo!", 270, 190);
+
+    ctx.font = "24px Arial";
+    ctx.fillText("Objetivo: " + objetivo.nome, 350, 270);
+    ctx.fillText("Meta: R$ " + objetivo.meta, 350, 320);
+    ctx.fillText(
+        "Aporte mensal: R$ " + objetivo.aporteMensal,
+        300,
+        370
+    );
+
+    ctx.font = "20px Arial";
+    ctx.fillText(
+        "Pressione ENTER para entrar no banco.",
+        320,
+        470
+    );
+}
 // ==================================================
 // DEFINIR VALOR
 // ==================================================
@@ -1539,7 +1586,10 @@ if (tela == "valorPrazo") {
     desenharAporteObjetivo();
     return;
 }   
-
+if (tela == "parabensObjetivo") {
+    desenharParabensObjetivo();
+    return;
+}
     // ==================================================
     // BANCO
     // ==================================================
