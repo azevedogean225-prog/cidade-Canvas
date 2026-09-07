@@ -34,6 +34,8 @@ let nomeObjetivoDigitado = "";
 
 let valorObjetivo = "";
 
+let opcaoValorObjetivo = 0;
+
 let prazoObjetivo = "";
 
 let tipoPrazo = "meses";
@@ -200,7 +202,38 @@ window.addEventListener("keydown", function (evento) {
         }
 
     }
-    
+    // =================================================
+    // TIPO PRAZO
+    // =================================================
+    else if (tela == "tipoPrazo") {
+
+    if (evento.key == "ArrowDown") {
+        opcaoTipoPrazo++;
+
+        if (opcaoTipoPrazo > 1) {
+            opcaoTipoPrazo = 0;
+        }
+    }
+
+    if (evento.key == "ArrowUp") {
+        opcaoTipoPrazo--;
+
+        if (opcaoTipoPrazo < 0) {
+            opcaoTipoPrazo = 1;
+        }
+    }
+
+    if (evento.key == "Enter") {
+
+        if (opcaoTipoPrazo == 0) {
+            tipoPrazo = "meses";
+        } else {
+            tipoPrazo = "anos";
+        }
+
+        tela = "prazoObjetivo";
+    }
+}
     // =================================================
     // VALOR PRAZO
     //==================================================
@@ -259,19 +292,33 @@ if (tela == "valorPrazo") {
     // VALOR DO OBJETIVO
     // ==================================================
 
-    if (tela == "valorObjetivo") {
+  else if (tela == "valorObjetivo") {
 
-        if (evento.key >= "0" && evento.key <= "9") {
-            valorObjetivo += evento.key;
+    if (evento.key == "ArrowDown") {
+        opcaoValorObjetivo++;
+
+        if (opcaoValorObjetivo > 1) {
+            opcaoValorObjetivo = 0;
         }
-
-        if (evento.key == "Backspace") {
-            valorObjetivo =
-                valorObjetivo.slice(0, -1);
-        }
-
     }
 
+    if (evento.key == "ArrowUp") {
+        opcaoValorObjetivo--;
+
+        if (opcaoValorObjetivo < 0) {
+            opcaoValorObjetivo = 1;
+        }
+    }
+
+    if (evento.key == "Enter") {
+
+        if (opcaoValorObjetivo == 0) {
+            tela = "digitarValorObjetivo";
+        } else {
+            tela = "estimativaObjetivo";
+        }
+    }
+}
 
     // ==================================================
     // MENU DO BANCO
@@ -331,6 +378,31 @@ if (tela == "valorPrazo") {
         }
 
     }
+
+    // ===================================================
+    // MENU DIGITAR VALOROBJETIVO
+    // ===================================================
+  
+    else if (tela == "digitarValorObjetivo") {
+
+    if (evento.key >= "0" && evento.key <= "9") {
+        valorObjetivo += evento.key;
+    }
+
+    if (evento.key == "Backspace") {
+        valorObjetivo = valorObjetivo.slice(0, -1);
+    }
+
+    if (evento.key == "Enter") {
+
+        if (valorObjetivo != "") {
+            objetivo.meta = Number(valorObjetivo);
+            tela = "tipoPrazo";
+        }
+    }
+}
+
+
 // ==================================================
 // MENU DE PRAZO
 // ==================================================
@@ -1406,89 +1478,100 @@ function desenharParabensObjetivo() {
 
 function desenharValorObjetivo() {
 
-    ctx.fillStyle = "#d9d9d9";
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    ctx.fillStyle = "darkblue";
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        80
-    );
-
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "white";
-    ctx.font = "40px Arial";
-    ctx.fillText(
-        "DEFINIR META",
-        300,
-        55
-    );
+    ctx.font = "28px Arial";
+    ctx.fillText("VALOR DO OBJETIVO", 300, 100);
 
+    ctx.font = "20px Arial";
+    ctx.fillText("Você sabe quanto precisa para alcançar esse objetivo?", 180, 160);
 
-    ctx.fillStyle = "black";
-    ctx.font = "26px Arial";
+    let opcoes = [
+        "Já sei o valor",
+        "Não sei ainda"
+    ];
 
-    ctx.fillText(
-        "Quanto você quer alcançar?",
-        300,
-        160
-    );
+    for (let i = 0; i < opcoes.length; i++) {
 
+        if (i == opcaoValorObjetivo) {
+            ctx.fillStyle = "#22c55e";
+        } else {
+            ctx.fillStyle = "white";
+        }
 
-    ctx.font = "22px Arial";
-
-    ctx.fillText(
-        "Objetivo: " + nomeObjetivoDigitado,
-        300,
-        220
-    );
-
-
-    // Campo do valor
+        ctx.font = "24px Arial";
+        ctx.fillText(
+            (i == opcaoValorObjetivo ? "➤ " : "   ") + opcoes[i],
+            350,
+            240 + i * 60
+        );
+    }
 
     ctx.fillStyle = "white";
+    ctx.font = "16px Arial";
+    ctx.fillText("Use ↑ ↓ para escolher e ENTER para confirmar", 300, 400);
+}
 
-    ctx.fillRect(
-        300,
-        250,
-        400,
-        50
-    );
+function desenharDigitarValorObjetivo() {
 
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "black";
-    ctx.font = "24px Arial";
+    ctx.fillStyle = "white";
+    ctx.font = "28px Arial";
+    ctx.fillText("VALOR DO OBJETIVO", 300, 100);
 
-    ctx.fillText(
-        "R$ " + valorObjetivo,
-        315,
-        283
-    );
+    ctx.font = "20px Arial";
+    ctx.fillText("Digite quanto você precisa para alcançar seu objetivo:", 190, 170);
 
+    ctx.fillStyle = "#22c55e";
+    ctx.font = "30px Arial";
+    ctx.fillText("R$ " + valorObjetivo, 400, 250);
 
-    ctx.font = "18px Arial";
+    ctx.fillStyle = "white";
+    ctx.font = "16px Arial";
+    ctx.fillText("Digite o valor e pressione ENTER", 350, 330);
+}
 
-    ctx.fillText(
-        "Digite o valor e pressione ENTER.",
-        300,
-        350
-    );
+function desenharTipoPrazo() {
 
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillText(
-        "Pressione ESC para voltar.",
-        350,
-        400
-    );
+    ctx.fillStyle = "white";
+    ctx.font = "28px Arial";
+    ctx.fillText("PRAZO DO OBJETIVO", 320, 100);
 
+    ctx.font = "20px Arial";
+    ctx.fillText("Você quer definir seu prazo em:", 330, 170);
+
+    let opcoes = [
+        "Meses",
+        "Anos"
+    ];
+
+    for (let i = 0; i < opcoes.length; i++) {
+
+        if (i == opcaoTipoPrazo) {
+            ctx.fillStyle = "#22c55e";
+        } else {
+            ctx.fillStyle = "white";
+        }
+
+        ctx.font = "24px Arial";
+
+        ctx.fillText(
+            (i == opcaoTipoPrazo ? "➤ " : "   ") + opcoes[i],
+            400,
+            240 + i * 60
+        );
+    }
+
+    ctx.fillStyle = "white";
+    ctx.font = "16px Arial";
+    ctx.fillText("Use ↑ ↓ para escolher e ENTER para confirmar", 300, 380);
 }
 
 
@@ -1570,23 +1653,31 @@ function desenhar() {
         return;
     }
     
+    if (tela == "digitarValorObjetivo") {
+    desenharDigitarValorObjetivo();
+    return;
+}
+    if (tela == "tipoPrazo") {
+    desenharTipoPrazo();
+    return;
+}
     if (tela == "prazoObjetivo") {
 
     desenharPrazoObjetivo();
 
     return;
 }
-if (tela == "valorPrazo") {
+   if (tela == "valorPrazo") {
 
     desenharValorPrazo();
 
     return;
 }
- if (tela == "aporteObjetivo") {
+   if (tela == "aporteObjetivo") {
     desenharAporteObjetivo();
     return;
 }   
-if (tela == "parabensObjetivo") {
+   if (tela == "parabensObjetivo") {
     desenharParabensObjetivo();
     return;
 }
