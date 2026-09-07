@@ -223,7 +223,21 @@ if (tela == "valorPrazo") {
     }
 
 }
-    // ==================================================
+    if (tela == "aporteObjetivo") {
+
+    if (
+        evento.key >= "0" &&
+        evento.key <= "9"
+    ) {
+        aporteMensal += evento.key;
+    }
+
+    if (evento.key == "Backspace") {
+        aporteMensal = aporteMensal.slice(0, -1);
+    }
+}
+
+   v// ==================================================
     // CRIAR OBJETIVO
     // ==================================================
 
