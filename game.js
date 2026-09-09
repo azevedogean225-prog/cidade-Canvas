@@ -41,6 +41,11 @@ let prazoObjetivo = "";
 let tipoPrazo = "meses";
 
 let aporteMensal = "";
+let opcaoAnalise = 0;
+
+let novoPrazoMeses = 0;
+let novoPrazoAnos = 0;
+let novoPrazoMesesRestantes = 0;
 
 let opcaoTipoPrazo = 0;
 
@@ -237,7 +242,7 @@ window.addEventListener("keydown", function (evento) {
     // =================================================
     // VALOR PRAZO
     //==================================================
-if (tela == "valorPrazo") {
+    if (tela == "valorPrazo") {
 
     if (
         evento.key >= "0" &&
@@ -393,13 +398,16 @@ if (tela == "valorPrazo") {
         valorObjetivo = valorObjetivo.slice(0, -1);
     }
 
-    if (evento.key == "Enter") {
+   if (evento.key == "Enter") {
 
-        if (valorObjetivo != "") {
-            objetivo.meta = Number(valorObjetivo);
-            tela = "tipoPrazo";
-        }
+    if (valorObjetivo != "") {
+        objetivo.nome = nomeObjetivoDigitado;
+        objetivo.meta = Number(valorObjetivo);
+
+        tela = "tipoPrazo";
     }
+}
+
 }
 
 
@@ -564,16 +572,39 @@ else if (tela == "prazoObjetivo") {
         objetivo.prazo = Number(prazoObjetivo);
         objetivo.tipoPrazo = tipoPrazo;
 
+        let totalMeses;
+
+        if (objetivo.tipoPrazo == "anos") {
+            totalMeses = objetivo.prazo * 12;
+        } else {
+            totalMeses = objetivo.prazo;
+        }
+
+        objetivo.necessarioMensal = objetivo.meta / totalMeses;
+
         tela = "aporteObjetivo";
     }
-}     
+}
+
+else if (tela == "analiseObjetivo") {
+    tela = "aporteObjetivo";
+}
+
 else if (tela == "aporteObjetivo") {
 
     if (aporteMensal != "") {
 
-        objetivo.aporteMensal = Number(aporteMensal);
+      objetivo.aporteMensal = Number(aporteMensal);
 
-        tela = "parabensObjetivo";
+if (objetivo.aporteMensal > 0) {
+    novoPrazoMeses = Math.ceil(objetivo.meta / objetivo.aporteMensal);
+    novoPrazoAnos = Math.floor(novoPrazoMeses / 12);
+    novoPrazoMesesRestantes = novoPrazoMeses % 12;
+}
+
+tela = "analiseObjetivo";
+
+       
     }
 }
    else if (tela == "parabensObjetivo") {
@@ -879,7 +910,86 @@ function desenharCadastro() {
 
 }
 
+// ==================================================
+// ANALISE OBJETIVO
+// ==================================================
 
+function desenharAnaliseObjetivo() {
+
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.font = "32px Arial";
+    ctx.fillText("PLANEJANDO SEU OBJETIVO", 500, 100);
+
+    ctx.font = "22px Arial"; 
+    ctx.fillText("Você pretende guardar:", 500, 180);
+
+    ctx.font = "30px Arial";
+    ctx.fillText(
+    "R$ " +
+    objetivo.aporteMensal.toFixed(2).replace(".", ",") +
+    " por mês.",
+    500,
+    230
+);
+
+ctx.font = "22px Arial";
+
+if (objetivo.aporteMensal >= objetivo.necessarioMensal) {
+
+    ctx.fillText(
+        "Esse valor é suficiente para alcançar sua meta dentro do prazo!",
+        500,
+        290
+    );
+
+} else {
+
+    ctx.fillText(
+    "Com esse valor, sua meta levará mais tempo.",
+    500,
+    290
+);
+
+ctx.fillText(
+    "Você pode escolher:",
+    500,
+    330
+);
+
+ctx.fillText(
+    (opcaoAnalise == 0 ? "> " : "  ") +
+    "Aumentar o prazo para " +
+    novoPrazoAnos +
+    " anos e " +
+    novoPrazoMesesRestantes +
+    " meses.",
+    500,
+    380
+);
+
+ctx.fillText(
+    (opcaoAnalise == 1 ? "> " : "  ") +
+    "Aumentar o aporte para R$ " +
+    objetivo.necessarioMensal.toFixed(2).replace(".", ",") +
+    " por mês.",
+    500,
+    430
+);
+
+ctx.fillText(
+    "Use ↑ ↓ para escolher e ENTER para confirmar.",
+    500,
+    500
+);
+}
+
+ctx.textAlign = "left"
+}
 // ==================================================
 // TELA DE CONHECIMENTO
 // ==================================================
@@ -1426,6 +1536,14 @@ function desenharAporteObjetivo() {
     ctx.font = "26px Arial";
     ctx.fillText("Quanto você pretende guardar por mês?", 250, 180);
 
+    ctx.font = "20px Arial";
+    ctx.fillText(
+        "Para alcançar sua meta nesse prazo, você precisa guardar R$ " +
+        objetivo.necessarioMensal.toFixed(2).replace(".", ",") +
+        " por mês.",
+        220,
+        220
+);
     ctx.fillStyle = "darkblue";
     ctx.font = "32px Arial";
     ctx.fillText("R$ " + aporteMensal, 430, 270);
@@ -1671,6 +1789,10 @@ function desenhar() {
 
     desenharValorPrazo();
 
+    return;
+}
+   else if (tela == "analiseObjetivo") {
+    desenharAnaliseObjetivo();
     return;
 }
    if (tela == "aporteObjetivo") {
