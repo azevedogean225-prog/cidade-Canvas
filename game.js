@@ -438,7 +438,21 @@ if (tela == "prazoObjetivo") {
     }
 
 }
+// ==================================================
+// SETAS DA ANÁLISE DO OBJETIVO
+// ==================================================
 
+if (tela == "analiseObjetivo") {
+
+    if (evento.key == "ArrowDown") {
+        opcaoAnalise = 1;
+    }
+
+    if (evento.key == "ArrowUp") {
+        opcaoAnalise = 0;
+    }
+
+}
     // ==================================================
     // ENTER
     // ==================================================
@@ -587,11 +601,26 @@ else if (tela == "prazoObjetivo") {
 }
 
 else if (tela == "analiseObjetivo") {
-    tela = "aporteObjetivo";
+
+    if (opcaoAnalise == 0) {
+
+        objetivo.prazo = novoPrazoMeses;
+        objetivo.tipoPrazo = "meses";
+
+        tela = "parabensObjetivo";
+    }
+
+    if (opcaoAnalise == 1) {
+
+        objetivo.aporteMensal = objetivo.necessarioMensal;
+
+        tela = "parabensObjetivo";
+    }
+
 }
 
-else if (tela == "aporteObjetivo") {
 
+else if (tela == "aporteObjetivo") {
     if (aporteMensal != "") {
 
       objetivo.aporteMensal = Number(aporteMensal);
@@ -1578,7 +1607,7 @@ function desenharParabensObjetivo() {
     ctx.fillText("Objetivo: " + objetivo.nome, 350, 270);
     ctx.fillText("Meta: R$ " + objetivo.meta, 350, 320);
     ctx.fillText(
-        "Aporte mensal: R$ " + objetivo.aporteMensal,
+        "Aporte mensal: R$ " + objetivo.aporteMensal.toFixed(2).replace(".", ","),
         300,
         370
     );
@@ -1646,8 +1675,11 @@ function desenharDigitarValorObjetivo() {
 
     ctx.fillStyle = "#22c55e";
     ctx.font = "30px Arial";
-    ctx.fillText("R$ " + valorObjetivo, 400, 250);
-
+    ctx.fillText(
+        "R$" + Number(valorObjetivo).toLocaleString("pt-BR"), 
+        400, 
+        250
+    );
     ctx.fillStyle = "white";
     ctx.font = "16px Arial";
     ctx.fillText("Digite o valor e pressione ENTER", 350, 330);
@@ -1803,6 +1835,19 @@ function desenhar() {
     desenharParabensObjetivo();
     return;
 }
+  if (tela == "analiseObjetivo") {
+
+    if (evento.key == "ArrowUp") {
+        opcaoAnalise = 0;
+    }
+
+    if (evento.key == "ArrowDown") {
+        opcaoAnalise = 1;
+    }
+}  
+
+
+
     // ==================================================
     // BANCO
     // ==================================================
